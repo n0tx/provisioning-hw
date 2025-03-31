@@ -2,15 +2,12 @@
 
 # Provisioning server #
 
-## Context ##
-Provisioning, in the context of VoIP and other telecommunication, means providing an automated process to make a 
-device able to connect and configure itself to be enabled to make and receive calls. This normally happens when the 
-device is plugged and boots up, connecting to a central server that releases the needed configuration.
-The scope of this application is to create a simple provisioning server that is able to generate dynamically the 
-needed configuration for every device type. 
+## Command to Request Provisiongin Application Server ##
+![image](https://github.com/user-attachments/assets/c77c1686-0932-4ad2-b3ea-737947edaa93)
 
-## Requirements ##
-There are two device types in the system:
+## Starting ProvisiongingApplication with port(s): 8080 (http) ##
+![image](https://github.com/user-attachments/assets/27942642-df13-4709-9878-3d8c613a041c)
+
 
 - Desk: used on office desks
 - Conference: used in conference rooms
@@ -29,99 +26,24 @@ configuration file should be dynamically generated, according to the phone model
 found in the inventory, the server should deny the provisioning request, returning a proper HTTP error code.
 As an additional requirement, the system should be able to support new device type provisioning with minimal code/configuration change.
 
-### Configuration file formats ###
-The two device types use the following configuration file formats:
-
-#### Desk: Property file ####
+### Default URL Path for H2 Database ###
 
 ```
-username=john         # From database
-password=doe          # From database
-domain=sip.voxloud.com # From application.properties
-port=5060             # From application.properties
-codecs=G711,G729,OPUS # From application.properties
+http://localhost:8080/h2-console
 ```
 
-#### Conference: JSON file ####
-  
-```json
-{
-  "username" : "john",              // From database
-  "password" : "doe",               // From database
-  "domain" : "sip.voxloud.com",      // From application.properties
-  "port" : "5060",                  // From application.properties
-  "codecs" : ["G711","G729","OPUS"] // from application.properties
-}
+`Credentials H2 Database from application.properties`
+
 ```
-
-The final configuration file should be created by taking data from database and from configuration properties contained 
-in `provisioning.*` namespace in `application.properties`
-
-### Override fragment ###
-In addition to standard provisioning described above, there should be the possibility to manually override final 
-configuration file, by providing a file fragment in the database (it should be Property or JSON file) that can replace or add some configuration 
-properties at runtime. Let's see the two cases:
-
-#### Desk: Property file ####
+spring.datasource.username=sa
+spring.datasource.password=password
 ```
-username=john                # From database
-password=doe                 # From database
-domain=sip.anotherdomain.com # From override fragment (replaced application.properties)
-port=5161                    # From override fragment (replaced application.properties)
-codecs=G711,G729,OPUS        # From application.properties
-timeout=10                   # From override fragment (added)
-```
-where the override fragment in the database is:
-```
+![image](https://github.com/user-attachments/assets/48fb532d-7497-43ab-bd2f-ec72ece5345b)
 
-domain=sip.anotherdomain.com
-port=5161
-timeout=10
-```
 
-#### Conference: JSON file ####
-  
-```json
-{
-  "username" : "john",                // From database
-  "password" : "doe",                 // From database
-  "domain" : "sip.anotherdomain.com", // From override fragment (replaced application.properties)
-  "port" : "5161",                    // From override fragment (replaced application.properties)
-  "codecs" : ["G711","G729","OPUS"],  // From application.properties
-  "timeout" : 10                      // From override fragment (added)
-}
-```
-where the override fragment in the database is:
-```
+#### List of Configuration Data from the Device Table ####
+![image](https://github.com/user-attachments/assets/0ff0e055-269b-48b7-9817-862aebed0789)
 
-{
-  "domain" : "sip.anotherdomain.com",
-  "port" : "5161",
-  "timeout" : 10 
-}
-``` 
 
-## How to access database ###
-Database is automatically recreated at startup with sample data. You can connect to [H2 Console](http://localhost:8080/h2-console), using the following parameters:
-
-- JDBC URL: `jdbc:h2:mem:test`
-- User Name: `sa`
-- Password: `password`
- 
-## Project delivery
-The final output of the project should include the following artifacts:
-
-- Complete `ProvisioningController` to handle provisioning requests according to the given request format
-- Complete `ProvisioningServiceImpl` implementation in order to support provisioning requests. Create all the necessary 
-classes to realize the best possible implementation, considering OOP principles   
-- Make `ProvisioningServiceImpl` able to support override fragments for some devices, according to the requirements
-- Tests for the implemented classes
-
-All the code should be pushed in __**your public Git repository**__(Bitbucket, Github, etc), since you can't push branches on this repository. 
-These are the steps:
-
-1. You create a public fork of this project on your Bitbucket account clicking [here](https://bitbucket.org/voxloud/provisioning-hw/fork) or you clone it and push to your account if you use other Git platforms (Github, Gitlab, etc)
-2. You commit and push to your fork master branch
-3. You share the (public) repository link with the reviewer when development is completed
-
-Note: The system will be tested by the reviewer on the sample data by running `results.sh`
+#### Testing the Provisioning Application Server with Request command ####
+![image](https://github.com/user-attachments/assets/2f1cc2ad-86a8-4e1b-ab0c-38e36787ec31)
